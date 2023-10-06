@@ -1,12 +1,12 @@
 /* Your Code Here */
-function createEmployeeRecord(firstName, familyName, title, payPerHour) {
+function createEmployeeRecord(employeeData) {
     return {
-        firstName,
-        familyName,
-        title,
-        payPerHour,
+        firstName: employeeData[0],
+        familyName: employeeData[1],
+        title: employeeData[2],
+        payPerHour: employeeData[3],
         timeInEvents: [],
-        timeOutEvents: []
+        timeOutEvents: [],
     };
 }
 
@@ -14,22 +14,28 @@ const createEmployeeRecords = function (employeeData) {
     return employeeData.map(createEmployeeRecord);
 };
 
-function createTimeEvent(recordObject, date, eventType) {
-    const [eventDate, eventTime] = date.split(" ");
-    const event = {
-        type: eventType,
-        hour: parseInt(eventTime),
-        date: eventDate,
+function createTimeInEvent(employeeRecord, date) {
+    let yourDate = date.split(" ");
+    let inTime = {
+      type: "TimeIn",
+      hour: parseInt(yourDate[1]),
+      date: yourDate[0],
     };
 
-    if (eventType === "TimeIn") {
-        recordObject.timeInEvents.push(event);
-    } else if (eventType === "TimeOut") {
-        recordObject.timeOutEvents.push(event);
-    }
-
-    return recordObject;
-}
+    employeeRecord.timeInEvents = [...employeeRecord.timeInEvents, inTime];
+    return employeeRecord;
+  }
+  
+  function createTimeOutEvent(employeeRecord, dateStamp) {
+    const [date, hour] = dateStamp.split(" ");
+    employeeRecord.timeOutEvents.push({
+      type: "TimeOut",
+      hour: parseInt(hour, 10),
+      date,
+    });
+    return employeeRecord;
+  }
+  
 
 function calculateHoursWorked(record, date) {
     for (let i = 0; i < record.timeInEvents.length; i++) {
